@@ -1,0 +1,11 @@
+Show device addresses
+
+```
+$ i2cdetect 1
+```
+
+```
+# show modules
+lsmod|grep i2c
+''' 
+

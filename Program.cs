@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Device.I2c;
 using System.Threading;
+using Iot.Device.Mlx90614;
 
 namespace raspi_temperature
 {
@@ -18,14 +19,21 @@ namespace raspi_temperature
         {
             //string aqs = I2cDevice.GetDeviceSelector();
 
-            var settings = new I2cConnectionSettings(1, 0x90);
-            I2cDevice myDevice = I2cDevice.Create(settings);
-            byte[] data = { 0x01, 0xFF }; // Or byte[] data = { 0x10, 0x01, 0xFF }; both fails
-            myDevice.Write(data);
+            var settings = new I2cConnectionSettings(1, 0x48);
+            using (I2cDevice device = I2cDevice.Create(settings))
+            {
+                var analogVal = device.ReadByte();
 
-            var buffer = new byte[128];
-            myDevice.Read(buffer);
-            Console.WriteLine(buffer);
+                var rawTemperature = Convert.ToDouble(analogVal);
+                var Vr = 5 * (rawTemperature) / 255;
+                var Rt = 10000 * Vr / (5 - Vr);
+                var temp = 1 / (((Math.Log(Rt / 10000)) / 3950) + (1 / (273.15 + 25)));
+                temp = temp - 273.15;
+                //
+                //  Display the readings in the debug window and pause before repeating.
+                //
+                Console.WriteLine("final temp: " + temp);
+            }
         }
     }
 }

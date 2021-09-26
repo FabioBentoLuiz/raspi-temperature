@@ -6,4 +6,8 @@
     <RootNamespace>raspi_temperature</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Iot.Device.Bindings" Version="1.5.0" />
+  </ItemGroup>
+
 </Project>

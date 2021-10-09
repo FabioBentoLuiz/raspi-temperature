@@ -1,11 +1,24 @@
+Packages
+```
+dotnet add package Iot.Device.Bindings
+dotnet add package Microsoft.Azure.Devices.Client
+dotnet add package System.Threading
+```
+
+
 Show device addresses
 
 ```
-$ i2cdetect 1
+i2cdetect 1
 ```
 
 ```
 # show modules
 lsmod|grep i2c
 ''' 
+
+For vscode ssh remote connection
+```
+ssh pi@raspberrypi.local
+```
 

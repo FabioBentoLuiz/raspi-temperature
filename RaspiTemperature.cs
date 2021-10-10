@@ -59,7 +59,7 @@ namespace raspi_temperature
         }
 
         private Message CreateMessage(double temperatureCelsius) {
-            var temperatureData = new TemperatureData { Id = "1", TemperatureCelsius = temperatureCelsius};
+            var temperatureData = new TemperatureData { Id = Guid.NewGuid().ToString(), DeviceId = "1", TemperatureCelsius = temperatureCelsius};
             var messageString  = JsonConvert.SerializeObject(temperatureData);
             return new Message(Encoding.ASCII.GetBytes(messageString));
         }

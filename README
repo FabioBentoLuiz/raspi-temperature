@@ -22,3 +22,8 @@ For vscode ssh remote connection
 ssh pi@raspberrypi.local
 ```
 
+Run
+Set the env `RASPI_01_CS` with your Azure IoT Hub connection string. 
+``` 
+dotnet run Program
+```

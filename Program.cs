@@ -9,6 +9,7 @@ namespace raspi_temperature
         {
             var rt = new RaspiTemperature();
             await rt.Run();
+            Console.WriteLine("Press [ENTER] to termitate...");
             Console.ReadLine();
         }
     }

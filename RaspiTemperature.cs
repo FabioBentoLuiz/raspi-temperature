@@ -1,7 +1,5 @@
 using System;
 using System.Device.I2c;
-using System.Threading;
-using Iot.Device.Mlx90614;
 using Microsoft.Azure.Devices.Client;
 using Newtonsoft.Json;
 using System.Text;
@@ -18,7 +16,8 @@ namespace raspi_temperature
             deviceClient = GetAzureIotHubClient();
         }
 
-        private DeviceClient GetAzureIotHubClient() {
+        private DeviceClient GetAzureIotHubClient()
+        {
             var connectionString = GetConnectionString();
             var deviceClient = DeviceClient.CreateFromConnectionString(connectionString, TransportType.Mqtt);
             deviceClient.SetConnectionStatusChangesHandler((status, reason) =>
@@ -29,9 +28,11 @@ namespace raspi_temperature
             return deviceClient;
         }
 
-        private string GetConnectionString() {
+        private string GetConnectionString()
+        {
             var connectionString = Environment.GetEnvironmentVariable("RASPI_01_CS");
-            if(String.IsNullOrEmpty(connectionString)) {
+            if (String.IsNullOrEmpty(connectionString))
+            {
                 throw new InvalidOperationException("Environment variable RASPI_01_CS is not set.");
             }
 
@@ -46,32 +47,35 @@ namespace raspi_temperature
 
             using (var device = I2cDevice.Create(settings))
             {
-                while(true) {
+                while (true)
+                {
                     var temperatureCelsius = ParseToCelsius(device.ReadByte());
                     Console.WriteLine($"Current temperature: {temperatureCelsius} C");
-                    
+
                     var msg = CreateMessage(temperatureCelsius);
                     await deviceClient.SendEventAsync(msg);
-                    
+
                     await Task.Delay(2000);
                 }
             }
         }
 
-        private Message CreateMessage(double temperatureCelsius) {
-            var temperatureData = new TemperatureData { Id = Guid.NewGuid().ToString(), DeviceId = "1", TemperatureCelsius = temperatureCelsius};
-            var messageString  = JsonConvert.SerializeObject(temperatureData);
+        private Message CreateMessage(double temperatureCelsius)
+        {
+            var temperatureData = new TemperatureData { Id = Guid.NewGuid().ToString(), DeviceId = "1", TemperatureCelsius = temperatureCelsius };
+            var messageString = JsonConvert.SerializeObject(temperatureData);
             return new Message(Encoding.ASCII.GetBytes(messageString));
         }
 
-        private double ParseToCelsius(byte analogicTemperature) {
+        private double ParseToCelsius(byte analogicTemperature)
+        {
             var rawTemperature = Convert.ToDouble(analogicTemperature);
-            var Vr = 5 * (rawTemperature) / 255;
-            var Rt = 10000 * Vr / (5 - Vr);
-            var temp = 1 / (((Math.Log(Rt / 10000)) / 3950) + (1 / (273.15 + 25)));
-            temp = temp - 273.15;
+            var ratedVoltage = 5 * (rawTemperature) / 255;
+            var resistence = 10000 * ratedVoltage / (5 - ratedVoltage);
+            var kelvinTemperature = 1 / (((Math.Log(resistence / 10000)) / 3950) + (1 / (273.15 + 25)));
+            var celciusTemperature = kelvinTemperature - 273.15;
 
-            return temp;
+            return celciusTemperature;
         }
     }
 }

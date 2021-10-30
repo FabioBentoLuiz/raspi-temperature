@@ -6,8 +6,8 @@ I've decided to go some steps further and:
 
 - send the read temperatures to [Azure IoT Hub](https://azure.microsoft.com/en-us/services/iot-hub/);
 - route the messages from Azure IoT Hub to an Azure Function. The function implementation is in the folder [azure-function](/azure-function);
-- save them in a [Cosmos DB (API for MongoDB)](https://docs.microsoft.com/en-us/azure/cosmos-db/mongodb/mongodb-introduction);
-- configured [Monitoring and Alerts](https://docs.microsoft.com/en-us/azure/iot-hub/tutorial-use-metrics-and-diags).
+- persist the messages in a [Cosmos DB (API for MongoDB)](https://docs.microsoft.com/en-us/azure/cosmos-db/mongodb/mongodb-introduction);
+- configure [Monitoring and Alerts](https://docs.microsoft.com/en-us/azure/iot-hub/tutorial-use-metrics-and-diags).
 
 ## Dependencies
 
